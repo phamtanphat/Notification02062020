@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button mBtnCreateNotifi;
     String CHANEL_ID = "MY_CHANEL";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,34 +30,54 @@ public class MainActivity extends AppCompatActivity {
         mBtnCreateNotifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MainActivity.class);
-                intent.putExtra("chuoi","Restart Activity");
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                PendingIntent pendingIntent =
+                //Pre
+                Intent intentPre = new Intent();
+                PendingIntent pendingPre =
                         PendingIntent.getActivity(
                                 MainActivity.this,
                                 123,
-                                intent,
+                                intentPre,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+                //Next
+                Intent intentNext = new Intent();
+                PendingIntent pendingNext =
+                        PendingIntent.getActivity(
+                                MainActivity.this,
+                                456,
+                                intentNext,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+                //Start
+                Intent intentStart = new Intent();
+                PendingIntent pendingPause =
+                        PendingIntent.getActivity(
+                                MainActivity.this,
+                                789,
+                                intentStart,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(MainActivity.this , CHANEL_ID)
-                        .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
-                        .setShowWhen(true)
-                        .setWhen(System.currentTimeMillis())
-                        .setLargeIcon(
-                                BitmapFactory.decodeResource(
-                                        getResources(),
-                                        R.drawable.ic_baseline_mood_24)
-                        )
-                        .setContentTitle("Thông báo có nội dung mới")
-                        .setContentText("Sự kiện sắp được ra mắt")
-                        .setContentIntent(pendingIntent);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                        new NotificationCompat.Builder(MainActivity.this, CHANEL_ID)
+                                .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
+                                .setShowWhen(true)
+                                .setWhen(System.currentTimeMillis())
+                                .setLargeIcon(
+                                        BitmapFactory.decodeResource(
+                                                getResources(),
+                                                R.drawable.ic_baseline_mood_24)
+                                )
+                                .setContentTitle("Thông báo có nội dung mới")
+                                .setContentText("Sự kiện sắp được ra mắt")
+
+                                .addAction(R.drawable.ic_baseline_skip_previous_24, "Pre", pendingPre)
+                                .addAction(R.drawable.ic_baseline_pause_24, "Pause", pendingPause)
+                                .addAction(R.drawable.ic_baseline_skip_next_24, "Next", pendingNext)
+                                .setStyle(
+                                        new androidx.media.app.NotificationCompat.MediaStyle()
+                                                .setShowActionsInCompactView(0,1,2));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     NotificationChannel notificationChannel =
                             new NotificationChannel(
                                     CHANEL_ID,
@@ -64,8 +85,9 @@ public class MainActivity extends AppCompatActivity {
                                     NotificationManager.IMPORTANCE_DEFAULT
                             );
                     notificationManager.createNotificationChannel(notificationChannel);
+
                 }
-                notificationManager.notify(1,builder.build());
+                notificationManager.notify(1, builder.build());
             }
         });
     }
