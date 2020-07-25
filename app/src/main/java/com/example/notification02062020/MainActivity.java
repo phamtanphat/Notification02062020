@@ -1,17 +1,15 @@
 package com.example.notification02062020;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                Notification.Builder builder =
-                        new Notification.Builder(MainActivity.this)
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(MainActivity.this , CHANEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
                         .setShowWhen(true)
                         .setWhen(System.currentTimeMillis())
