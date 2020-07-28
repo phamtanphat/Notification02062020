@@ -27,21 +27,40 @@ public class MainActivity extends AppCompatActivity {
 
         mBtnCreateNotifi = findViewById(R.id.buttonCreateNotifi);
 
+        if (getIntent() != null) {
+            int value = getIntent().getIntExtra("notification", -2);
+            switch (value) {
+                case -1:
+                    Toast.makeText(this, "Button Pre", Toast.LENGTH_SHORT).show();
+                    break;
+                case 0:
+                    Toast.makeText(this, "Button Play", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Toast.makeText(this, "Button next", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
         mBtnCreateNotifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Pre
-                Intent intentPre = new Intent();
+                Intent intentPre = new Intent(MainActivity.this,MainActivity.class);
+                intentPre.putExtra("notification", -1);
+                intentPre.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intentPre.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingPre =
                         PendingIntent.getActivity(
                                 MainActivity.this,
                                 123,
                                 intentPre,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
-
                 //Next
-                Intent intentNext = new Intent();
+                Intent intentNext = new Intent(MainActivity.this,MainActivity.class);
+                intentNext.putExtra("notification", 1);
+                intentNext.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intentNext.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingNext =
                         PendingIntent.getActivity(
                                 MainActivity.this,
@@ -49,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
                                 intentNext,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                 //Start
-                Intent intentStart = new Intent();
+                Intent intentStart = new Intent(MainActivity.this,MainActivity.class);
+                intentStart.putExtra("notification", 0);
+                intentStart.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intentStart.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingPause =
                         PendingIntent.getActivity(
                                 MainActivity.this,
@@ -76,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                                 .addAction(R.drawable.ic_baseline_skip_next_24, "Next", pendingNext)
                                 .setStyle(
                                         new androidx.media.app.NotificationCompat.MediaStyle()
-                                                .setShowActionsInCompactView(0,1,2));
+                                                .setShowActionsInCompactView(0, 1, 2));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     NotificationChannel notificationChannel =
                             new NotificationChannel(
